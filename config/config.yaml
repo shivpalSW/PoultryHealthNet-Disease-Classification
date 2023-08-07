@@ -1,3 +1,4 @@
+
 artifacts_root: artifacts
 
 data_ingestion:
@@ -7,4 +8,3 @@ data_ingestion:
   unzip_dir: artifacts/data_ingestion
 
 
-  
