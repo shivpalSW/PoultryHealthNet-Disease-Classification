@@ -1,5 +1,5 @@
-# PoultryHealthNet-Disease-Classification
-PoultryHealthNet-Avian-Disease-Classification using MLOPS (DVC and Gthub actions & AWS cloud )
+# MLflow-DVC-PoultryHealthNet-Avian-Disease-Classification
+PoultryHealthNet-Avian-Disease-Classification using MLOPS (MLFLOW,DVC and Github actions & AWS cloud )
 
 
 ### WOrkflow steps I have followed in this project
