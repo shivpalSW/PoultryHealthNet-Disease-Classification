@@ -6,6 +6,7 @@ data_ingestion:
   source_URL:  https://github.com/shivpalSW/PoultryHealthNet-Disease-Classification/raw/main/Chicken-fecal-images.zip
   local_data_file: artifacts/data_ingestion/data.zip
   unzip_dir: artifacts/data_ingestion
+  
 
 prepare_base_model:
   root_dir: artifacts/prepare_base_model
@@ -22,3 +23,4 @@ prepare_callbacks:
 training:
   root_dir: artifacts/training
   trained_model_path: artifacts/training/model.h5
+

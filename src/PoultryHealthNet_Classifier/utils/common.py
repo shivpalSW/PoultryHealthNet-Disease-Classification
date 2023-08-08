@@ -1,7 +1,7 @@
 import os
 from box.exceptions import BoxValueError
 import yaml
-from src.PoultryHealthNet_Classifier import logger
+from PoultryHealthNet_Classifier import logger
 import json
 import joblib
 from ensure import ensure_annotations
