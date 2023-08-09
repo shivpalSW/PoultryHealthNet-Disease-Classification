@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>cnncls</title>
+	<link rel="shortcut icon"
+        href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj4POGF-TWnEZSwfofD2K6z3uTwCso6VXLUQ&usqp=CAU" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<style>
+		body{background-color: #eff2f9;}
+		.iupload h3{color: #1b2d6b;font-size: 30px;font-weight: 700;}
+		.img-part{height:300px;width:300px;margin:0px auto;}
+		.image-part{height:300px;width:300px;border:1px solid #1b2d6b;}
+		.image-part img{position:absolute;height: 300px;width:300px;display:none;padding:5px;}
+		.image-part #video{display:block;height: 300px;width:300px;padding:5px;}
+		.res-part{border:1px solid #dedede;margin-left:20px;height: 310px;width:100%;padding:5px;margin:0px auto;overflow:auto;}
+		.res-part2{border:1px solid #dedede;height: 310px;width:100%;padding:5px;margin:0px auto;}
+		.resp-img{height: 298px;width: 233px;margin:0px auto;}
+		.jsonRes{margin-left:30px;}
+		#send{cursor:pointer;}
+		.btn-part{width:325px;}
+		textarea,
+		select,
+		.form-control,
+		.custom-select,
+		button.btn,
+		.btn-primary,
+		input[type="text"],
+		input[type="url"],
+		.uneditable-input{
+			border: 1px solid #363e75;
+			outline: 0 !important;
+			border-radius:0px;
+			box-shadow: none;
+		   -webkit-box-shadow: none;
+		   -moz-box-shadow: none;
+		   -moz-transition: none;
+		   -webkit-transition: none;
+		}
+		textarea:focus,
+		select:focus,
+		.form-control:focus,
+		.btn:focus,
+		.btn-primary:focus,
+		.custom-select:focus,
+		input[type="text"]:focus,
+		.uneditable-input:focus{
+			border: 1px solid #007bff;
+			outline: 0 !important;
+			border-radius:0px;
+			box-shadow: none;
+		   -webkit-box-shadow: none;
+		   -moz-box-shadow: none;
+		   -moz-transition: none;
+		   -webkit-transition: none;
+		}
+		#loading {
+			position: fixed;
+			left: 0px;
+			top: 0px;
+			width: 100%;
+			height: 100%;
+			z-index: 9999999999;
+			overflow: hidden;
+			background: rgba(255, 255, 255, 0.7);
+		}
+		.loader {
+			border: 8px solid #f3f3f3;
+			border-top: 8px solid #363e75;
+			border-radius: 50%;
+			width: 60px;
+			height: 60px;
+			left: 50%;
+			margin-left: -4em;
+			display: block;
+			animation: spin 2s linear infinite;
+		}
+		.loader,
+		.loader:after {display: block;position: absolute;top: 50%;margin-top: -4.05em;}
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+		.right-part{border:1px solid #dedede;padding:5px;}
+		.logo{position:absolute;right:0px;bottom:0px;margin-right:30px;margin-bottom:30px;}
+	</style>
+</head>
+<body>
+    <div class="main container">
+		<section class="iupload">
+			<h3 class="text-center py-4">PoultryHealthNet-Avian-Disease-Classification [Object Classification]</h3>
+			<div class="row">
+				<div class="img-part col-md-6">
+					<div class="image-part">
+						<video autoplay id="video" poster="https://img.freepik.com/free-vector/hand-drawn-animals-silhouette-set_23-2149563636.jpg?w=2000"></video>
+						<img src="" id="photo">
+						<canvas style="display:none;" id="canvas"></canvas>
+					</div>
+					<div class="btn-part">
+						<form id="upload-data pt-3" class="">
+							<div class="input-group mt-3 row">
+								<button type="button" class="btn btn-primary col-md-5 col-xs-5 ml-3 mr-4" id="uload">Upload</button>
+								<button id="send" type="button" class="btn btn-success col-md-5 col-xs-5">Predict</button>
+							</div>
+
+
+
+
+
+
+							<!-- change url value  -->
+
+
+
+
+							<input type="hidden" class="form-control mr-2" id="url" placeholder="Enter REST Api url..." value="../predict"/>
+							<input name="upload" type="file" id="fileinput" style="position:absolute;top:-500px;"/><br/>
+						</form>
+					</div>
+				</div>
+				<div class="col-md-6 col-xs-12 right-part">
+					<h5 class="mb-2"><center>Prediction Results</center></h5>
+					<div class="row">
+						<div class="res-part2 col-md-5 col-xs-12"></div>
+						<div class="res-part col-md-5 col-xs-12"><div class="jsonRes"></div></div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAmVBMVEX///8GFjoAFDkAACMAACwAACoAACgAACYAADAAADIAACIAAC8AEjgAAB8ADzcAACcACDQAABvy8/XFx83o6ex6fowAABnr7O+ws7s1PVZXXXAeKUdCSV+7vsUwOFL3+PnP0dbe3+Nuc4J9gY+ZnKahpK4AAAARH0Fma3yFiZVFTGLKzNJMU2fZ2t2Pk54dKEYoMUy1t79pbn+PNIE3AAAI4ElEQVR4nO2d63qiMBCGyxlREdGu5wq2rrqubu39X9yKh3ogySSQidQn7+9SMkJmvplJwsuLRqPRaDQajUaj0Wg0Go1Go9FoNBqNRqN5Qjb9+XzXffQo0Ehea5bj2K41mDx6KCj0PwPfNA6E7ddHj0Y+nZEXGhfc5aMHJJl42Ly2b481f/SYpNJv1Yx7gmfyN7OmmTPQ8J/nPY1Hdt4+wzCjRw9MFpsoIhlomOGjRyaJJAiJBhqNJ3mGqdMgG2iYtUePTQrdiPIEn8XCuEE10DD96aOHV57pJ9nJPI+FA59uoGHWf76FwzrDwGew8MthGWgY9fjRIyzJymMbaNg/3MJ5EzDwp1u4Aw384RYmASGbeCYLU5em1a74yZ4mpmu1C2a1LOy8i/w1S8pcLKyQpom3i98i5b+/LClTQQuTr6YdjQQumAGR/mxhRXKLyTiomYbb578CjPQnqpEB90dWNqVMW+ASOBCenmEFqhjz0D36RHvLfU2H10DDNBCHzkV/cQ5qpsPt11MXjvTnt3SBOXqYycj7Dto+d5OBKxCeLRTxXtLZjK2rof7irk4PeALhifAN0wI23WHzeqQ17uI0O+W9t3CMaQOTlXfbZAgSzgvfXQEDjegvphEMOou7gB3x/tZwRnj7f4eodtCIl7kStdXhu3TdFjLQqM1wTSHTt3OSMuR0eQJx4ogvJOblEA+t/Cg5BdvU4I8TR+orZHPyrH1CTsCrj/9w5RM3FvILJUmsmqS83P7gupgznyjwn6URj4mu3nS5BNs8EDbQcNQ28jstshrhcwfrX+IGGq7SNTUfpEZ7RpNHsPV8jrpTjhZnFJLC0qKMosYVlUcCavSClyBbdSEeEFcSZAQbjuuF1OgFi+d/S6Fboz6C6A/H9bxVi3u4JoAMkjo9VPMItomgWLtYqKjU1vHoXiLkyMKFxdoZ08c3LmNCDPMnOATbdCEq1s4oKmJMaFHiMAaOYthQWKydCQf45u0NZEZqDllV1MsYihLgNSGVuCIAXcFELOe9gb82UpyU3eOrg4Kt2yqiZU4oSA97QOXPAuPVqKiXyVCQWgAtMPgtKqhlTjgCrZBiLIHxNSFRtS3uZTLQU4sPmtg+AVbYOqxAwwG2LE2g8XmAYIuLapnvGyDLUkiKgBW2caGM6YLp4srSGeQkIMH2Kl6XubOwjmog2OSDBFuZUH+EtwxbkAYUqYFg1eVZLsMGt6b/Ts3pz1jsSfJWchIaIj3JAnSBQAEqqhn4C8GgSpphfofOLSZbsHGvRWDh7vAM3IADZAu21CsZCQ94azwL/4KTiC3Y/pXR25d74AX8DViAZ7efZUzCPYiLvJfQLGRX2DhWxvIQfqIZGIPFP+bNe+yyADeINYwP8CVjCjaR5SQsEMMh6CeYLdH3snL0jI3WWuuA0Z4VitdyJqGBmf+CfsZkrC+fhqXl6BkrRTJwClYeWBOkePk3RxsrWHRa0K0ZkXgOvuHcNNDWB79DT4Eh2LqSAkUGXu40gDyplVCvlZAyfYO2lmYKPQZGhW0lK1BkoBVLE8jR0AVbUmS5Bf0+CZKFc+A50AXb1JAWKPaYLaztMivA0dAFG1QhFwNvATSQGtIFW/na2g14rvQf+1WjCra4Ji9QZOAt2mMPlC7YJIqZA2iqNGZnTlTB1pcnZo4EWKq0yw4W7R75sl7ZJkwOF8lAoFBKXcPGt9lOALwEf8O0kLaGbV6uE0oAb/0z00LaDwtXyIXBqwYzLaQJtrKNQtKt0GqlKcNCmmCT/47u9R+WgS8poxjcIgu2npQS/i2IjTXGlGqY5EvgFoA4iG2nLn3nFeWu0mN9BmJThq5pTIdYGYolFi4uWGgGMnQpJUItZcf6DK6l1UVZ0HILsv+WnDOdQN0NNKYUoigVtkhmXv8NZm/0ZUapeJNboq9S8/ozlCkviS15zGTBlqC8o7jT8GVHrkSRBZucbnYO3HWlCTG8kQXbVmZ99AqubTiFiYkvHlGwIaQUB7BPLSWtWyYLYQy5loG9v3lIGDdxYkyQHiHqSqEMUhc/IP0hTijMllshHw61zmd7RMG2krNoJg/6UREEKU1ajcxKlcuBt0LhzOe9q6l9Ef7qD5KbUXGI9+pe1bQJxdlJgZ3ZfCjYznU/EYmCrfCOOxAFG2Wm9u1EJAm2DyQ1s6eJVc6/4jYiks756eEobtrtpHPbBiYJti+MxP6IkmMUetdrE0kVNqSk6UCL0vuRy3W8cAgTH1yQUhxFpwpdCTfTzqfbffk17m88NSdhXKVFJMEmb3FeDmVHQV5aLUF+WmyxBKmh8Mid/tmb+vlUTX679wpPiZ/ZMz07S0KFDae8doTvnBQpfB1rigTBlkpd2nVHM1Fm4froa4J8ZZZUApCFmjMUThyqNYQ7Jmg5haEsVBw5KLdWvmCC0ND+BnlH5R1ZgkE4xbeD+giRK1B37PNggghG1GuYu4CIdING/jBttAJihqX6c4BLLy/YkPoUB9SfN5v+zpUtd4iS22hi9gzJ5GdhqYNKAB50GOstqI/wl4LyDAjmI7TVn1SaB/MRIq7yEiBXC5dIW72byQNvSyyOXYnPxiIqUrWClAZmUoG2al0IxLywGh/FTYseXwljV+ODsTO0On70wO8fXFH6UCsqYVSNTzqhddMaTiW8DF6Zu9FOHm3aiU/wLJBiBgYqj7NmMi12WjVA5Cg76xkmXsg30X5TVcPnIh5Jjhdmsxpx8MJ0LNWfRiJfMVPFa8mjLK8wvYGqw8iF2LmSJmPNq4QUJdAdyNjjFAbDSrmYW+aOX9LG0HqrTBAkEn9ZZZxqo7VQ250oQjpsF1U4kWdU0IMSSJeeLf6umn4wVt2aKE5363hihyhELe+1QhqNh87SbnF6nUbNdYc/5/FdmE5mkeX47DJqo+ZY/teuGmluEdL+69gJ3HotNE3j6omaphlGdccK/i3nP+zlJJFOtrOB6duuZ3lBYHmWZbl+42242iVV+WKxFKZxr5smaZomm7TbeyrTNBqNRqPRaDQajUaj0Wg0Go1Go9FoNJqn4j9ttJKtbD1OngAAAABJRU5ErkJggg=="/>
+
+
+<div id="loading"><div class="loader"></div></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script>
+var mybtn = document.getElementById('startbtn');
+var myvideo = document.getElementById('video');
+var mycanvas = document.getElementById('canvas');
+var myphoto = document.getElementById('photo');
+var base_data = "";
+
+function sendRequest(base64Data){
+	var type = "json";
+	if(base64Data != "" || base64Data != null){
+		if(type == "imgtobase"){
+			$(".res-part").html("");
+			$(".res-part").html(base64Data);
+		}
+		else if(type == "basetoimg"){
+			var imageData = $("#imgstring").val();
+			$(".res-part").html("");
+			$(".res-part").append("<img src='data:image/jpeg;base64," + imageData + "' alt='' />");
+		}
+		else{
+			var url = $("#url").val();
+			$("#loading").show();
+			$.ajax({
+				url : url,
+				type: "post",
+				cache: false,
+				async: true,
+				crossDomain: true,
+				headers: {
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin':'*'
+				},
+				data:JSON.stringify({image:base64Data}),
+				success: function(res){
+					$(".res-part").html("");
+					$(".res-part2").html("");
+					try{
+						var imageData = res[1].image;
+						if(imageData.length > 100){
+							if(imageData.length > 10){$(".res-part2").append("<img class='resp-img' src='data:image/jpeg;base64," + imageData + "' alt='' />");}
+						}
+					}catch(e){}
+					$(".res-part").html("<pre>" + JSON.stringify(res[0], undefined, 2) + "</pre>");
+					$("#loading").hide();
+				}
+			});
+		}
+	}
+}
+
+$(document).ready(function(){
+	$("#loading").hide();
+
+	$('#send').click(function(evt){
+		sendRequest(base_data);
+    });
+
+    $('#uload').click(function(evt) {
+        $('#fileinput').focus().trigger('click');
+    });
+	$("#fileinput").change(function(){
+		if (this.files && this.files[0]){
+			var reader = new FileReader();
+			reader.onload = function (e){
+				var url = e.target.result;
+				var img = new Image();
+				img.crossOrigin = 'Anonymous';
+				img.onload = function(){
+					var canvas = document.createElement('CANVAS');
+					var ctx = canvas.getContext('2d');
+					canvas.height = this.height;
+					canvas.width = this.width;
+					ctx.drawImage(this, 0, 0);
+					base_data = canvas.toDataURL('image/jpeg', 1.0).replace(/^data:image.+;base64,/, '');
+					canvas = null;
+				};
+				img.src = url;
+				$('#photo').attr('src', url);
+				$('#photo').show();
+				$('#video').hide();
+			}
+			reader.readAsDataURL(this.files[0]);
+		}
+	});
+});
+
+</script>
+</body>
+</html>
