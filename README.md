@@ -12,3 +12,6 @@ PoultryHealthNet-Avian-Disease-Classification using MLOPS (MLFLOW,DVC and Github
 7. created the pipeline file
 8. created the main.py file
 9. created the dvc.yaml file (MLOPS tool)
+
+## 3. Created AWS ECR repo to store/ save Docker image
+Saved the URI : 815723463103.dkr.ecr.us-east-1.amazonaws.com/poultryhealthnet
